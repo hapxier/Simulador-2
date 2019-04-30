@@ -7,7 +7,7 @@ var A = 0; //numero de años
 //Estados
 var PC = 30; //Porcentaje crecimiento poblacional
 var CP = 200; //Consumo promedio de agua por casa
-var CL = 0.3; //Costos por litro de agua
+var CL = 0.01; //Costos por litro de agua
 var PR = 30; //Porcentaje de recuperacion
 //Salidas
 var U = 0; //Utilidad
@@ -34,7 +34,7 @@ function calcular() {
 		for (var i = 1; i <= A; i++) {
 			C = parseInt(C) + parseInt(C * PC / 100);
 			CR = parseInt(CR - ( C * ( CP * 365)) + (CR * (PR / 100)));
-			U = C * CP * CL - CM;
+			U = (C * CP * CL * 365) - CM;
 			
 			console.log('Año: '+ i);
 			console.log('Casas: '+ C);
