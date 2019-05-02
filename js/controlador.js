@@ -12,11 +12,16 @@ var PR = 30; //Porcentaje de recuperacion
 //Salidas
 var U = 0; //Utilidad
 
+var años = [];
+var data1 = [];
+var data2 = [];
+
 function calcular() {
 
 	if (validacion()) {
 		$('#div-salida').show();
 		$('#div-carru').show();
+		$('#div-grafica').show();
 
 		document.getElementById("btn-calcular").disabled = true;
 	    document.getElementById("btn-cambiar").disabled = true;
@@ -31,8 +36,10 @@ function calcular() {
 		CR = document.getElementById("txt-capacidad").value;
 		CM = document.getElementById("txt-costos").value;
 		
+
 		for (var i = 1; i <= A; i++) {
 			C = parseInt(C) + parseInt(C * PC / 100);
+			CRT = parseInt(CR - ( C * ( CP * 365)));
 			CR = parseInt(CR - ( C * ( CP * 365)) + (CR * (PR / 100)));
 			U = (C * CP * CL * 365) - CM;
 			
@@ -44,7 +51,12 @@ function calcular() {
 			//tabla de resultados
 			document.getElementById("tbl").innerHTML +=
 						"<tr><td>"+i+"</td><td>"+C+"</td><td>"+U+"</td><td>"+CR+"</td></tr>";
+
+			años.push(i);
+			data1.push(CR);
+			data2.push(CRT);
 		}
+		grafica();
 	}else{
         reiniciar();
     }
@@ -87,6 +99,8 @@ function reiniciar() {
 $( document ).ready(function() {
 	$('#div-salida').hide();
 	$('#div-carru').hide();
+	//div-grafica
+	$('#div-grafica').hide();
 });
 
 function validacion() {
@@ -107,4 +121,31 @@ function validacion() {
     }else{
         return true;
     }
+}
+
+function  grafica (){
+	var data = {
+	labels: años,
+	datasets: [
+	    {
+	        label: "Nivel final del año",
+	        fillColor: "rgba(220,220,220,0.5)",
+	        strokeColor: "rgba(220,220,220,0.8)",
+	        highlightFill: "rgba(220,220,220,0.75)",
+	        highlightStroke: "rgba(220,220,220,1)",
+	        data: data1
+	    },
+	    {
+	        label: "Consumido del año",
+	        fillColor: "rgba(151,187,205,0.5)",
+	        strokeColor: "rgba(151,187,205,0.8)",
+	        highlightFill: "rgba(151,187,205,0.75)",
+	        highlightStroke: "rgba(151,187,205,1)",
+	        data: data2
+	    }
+	]
+	};
+
+	var ctx = document.getElementById("myChart").getContext("2d");
+	var myBarChart = new Chart(ctx).Bar(data);
 }
